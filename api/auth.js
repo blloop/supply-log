@@ -10,25 +10,36 @@ export default async function handler(req, res) {
   const { username, password } = req.body;
 
   if (
-    username === process.env.MASTER_USERNAME &&
-    password === process.env.MASTER_PASSWORD
+    username === process.env.ACCOUNT_USERNAME &&
+    password === process.env.ACCOUNT_PASSWORD
   ) {
     const supabase = createClient(
       process.env.VITE_SUPABASE_URL,
       process.env.VITE_SUPABASE_KEY,
     );
 
-    // Insert test row
-    const { data, error } = await supabase.from("test").insert([
-      {
-        content: "Test Write",
-      },
-    ]);
+    const { user, error } = await supabase.auth.signInWithPassword({
+      email: process.env.MASTER_USERNAME,
+      password: process.env.MASTER_PASSWORD,
+    });
 
     if (error) {
       return res
         .status(500)
         .json({ success: false, message: "Database error", error });
+    }
+
+    // Insert test row
+    const { data, error2 } = await supabase.from("test").insert([
+      {
+        content: "Test Write",
+      },
+    ]);
+
+    if (error2) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error", error2 });
     }
 
     res.status(200).json({ success: true });
