@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const response = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
 
     const data = await response.json();
-    alert(data.success ? 'Login successful!' : 'Invalid credentials')
+    alert(data.success ? "Login successful!" : "Invalid credentials");
   };
 
   return (
