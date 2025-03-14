@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { serialize } from "cookie";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -18,29 +20,27 @@ export default async function handler(req, res) {
       process.env.VITE_SUPABASE_KEY,
     );
 
-    const { user, error } = await supabase.auth.signInWithPassword({
+    const { _, authError } = await supabase.auth.signInWithPassword({
       email: process.env.MASTER_USERNAME,
       password: process.env.MASTER_PASSWORD,
     });
 
-    if (error) {
+    if (authError) {
+      console.log("authError", authError)
       return res
         .status(500)
-        .json({ success: false, message: "Database error", error });
+        .json({ success: false, message: "Database error", authError });
     }
 
-    // Insert test row
-    const { data, error2 } = await supabase.from("test").insert([
-      {
-        content: "Test Write",
-      },
-    ]);
+    const token = jwt.sign({ id: process.env.ACCOUNT_USERNAME }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    if (error2) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Database error", error2 });
-    }
+    // Set an HTTP-only cookie
+    res.setHeader("Set-Cookie", serialize("session_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      path: "/",
+    }));
 
     res.status(200).json({ success: true });
   } else {

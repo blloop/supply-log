@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
+    "cookie": "^1.0.2",
+    "jsonwebtoken": "^9.0.2",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",
     "react-dom": "^19.0.0"
