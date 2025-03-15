@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Login() {
+export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,7 +12,13 @@ export default function Login() {
     });
 
     const data = await response.json();
-    alert(data.success ? "Login successful!" : "Invalid credentials");
+    if (data.success) {
+      window.location.reload();
+    } else {
+      setUsername("");
+      setPassword("");
+      alert("Invalid credentials")
+    }
   };
 
   return (
