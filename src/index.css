@@ -12,3 +12,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#loader {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  inset: 0;
+  background-color: #00000066;
+}
+
+#loader img {
+  width: 12rem;
+  height: 12rem;
+}
