@@ -1,4 +1,5 @@
 import Calendar from "react-calendar";
+import 'react-calendar/dist/Calendar.css';
 import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import LogTable from "./LogTable";
@@ -11,11 +12,12 @@ type Value = Date | null | [Date | null, Date | null];
 export default function App() {
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [screen, setScreen] = useState(0);
+
+  const [value, setValue] = useState<Value>(new Date());
   const [buyerType, setBuyerType] = useState<String>("Buyer");
   const [unitType, setUnitType] = useState<"lb" | "kg">("lb");
   const [currency, setCurrency] = useState<String>("$");
-
-  const [value, setValue] = useState<Value>(new Date());
 
   const checkLogin = async () => {
     setVerifying(true);
