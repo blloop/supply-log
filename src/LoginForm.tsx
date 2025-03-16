@@ -3,13 +3,16 @@ import { useState } from "react";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { Package } from "lucide-react";
+import Spinner from "./Spinner";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     const response = await fetch("/api/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -23,6 +26,7 @@ export default function LoginForm() {
       setUsername("");
       setPassword("");
       alert("Invalid credentials");
+      setLoading(false);
     }
   };
 
@@ -84,7 +88,7 @@ export default function LoginForm() {
               onClick={handleLogin}
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
-              Sign in
+              {loading ? <Spinner /> : "Sign in"}
             </Button>
           </div>
         </div>

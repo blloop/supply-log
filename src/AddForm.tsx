@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "./components/ui/button";
+import Spinner from "./Spinner";
 
 export default function AddForm({
   header,
@@ -20,7 +21,8 @@ export default function AddForm({
   header: string[];
   date: Date;
 }) {
-  const [isNewEntryOpen, setIsNewEntryOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return (
     <Dialog open={isNewEntryOpen} onOpenChange={setIsNewEntryOpen}>
@@ -80,9 +82,9 @@ export default function AddForm({
           </Button>
           <Button
             className="bg-blue-600 hover:bg-blue-700"
-            onClick={() => setIsNewEntryOpen(false)}
+            onClick={() => setOpen(false)}
           >
-            Save
+            {loading ? <Spinner /> : "Save"}
           </Button>
         </DialogFooter>
       </DialogContent>

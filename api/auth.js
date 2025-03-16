@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         "Set-Cookie",
         serialize("session_token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: true,
           sameSite: "Strict",
           path: "/",
         }),
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         "Set-Cookie",
         serialize("session_token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: true,
           sameSite: "Strict",
           maxAge: 30,
           path: "/",
