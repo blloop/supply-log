@@ -8,7 +8,7 @@ import Loader from "./Loader";
 import { LogOut, Package } from "lucide-react";
 // import { Settings, LogOut, Package } from "lucide-react"
 import { Button } from "@/components/ui/button";
-import Overview from "./Overview";
+// import Overview from "./Overview";
 
 const BUYER_TITLE = "Restaurant";
 
@@ -29,7 +29,6 @@ export default function App() {
 
   const [rows, setRows] = useState<Row[]>([]);
   const [value, setValue] = useState<Value>(new Date());
-  console.log("input value", value);
 
   const checkLogin = async () => {
     setVerifying(true);
@@ -48,7 +47,6 @@ export default function App() {
       method: "POST",
       credentials: "include",
     });
-
     setVerified(false);
     setVerifying(false);
     window.location.reload();
@@ -56,7 +54,6 @@ export default function App() {
 
   const addRow = (row: Row) => {
     setRows([...rows, row]);
-    console.log(rows);
   };
 
   useEffect(() => {
@@ -128,7 +125,7 @@ export default function App() {
             />
           </div>
         </div>
-        <Overview rows={rows} date={value ? (value as Date) : new Date()} />
+        {/* <Overview rows={rows} date={value ? (value as Date) : new Date()} /> */}
       </div>
     </div>
   );

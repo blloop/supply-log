@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Row } from "./App";
 import { cn } from "./lib/utils";
-import Plane from "./assets/plane.png"
+import Plane from "./assets/plane.png";
 
 export default function LogTable({
   buyerType,
@@ -65,9 +65,7 @@ export default function LogTable({
         <TableBody>
           {rows
             .filter(
-              (e) =>
-                e.date ===
-                date.toLocaleDateString("en-CA").split("T")[0],
+              (e) => e.date === date.toLocaleDateString("en-CA").split("T")[0],
             )
             .map((item, index) => (
               <TableRow key={index}>

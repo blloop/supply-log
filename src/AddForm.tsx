@@ -123,7 +123,6 @@ export default function AddForm({
               type="date"
               value={date.toLocaleDateString("en-CA").split("T")[0]}
               onChange={(e) => {
-                console.log("TRIGGERED");
                 setDate(new Date(e.target.value));
               }}
             />
