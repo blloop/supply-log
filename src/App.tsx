@@ -10,16 +10,26 @@ import { LogOut, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Overview from "./Overview";
 
+const BUYER_TITLE = "Restaurant";
+
 type Value = Date | null | [Date | null, Date | null];
+
+export type Row = {
+  date: string;
+  buyer: string;
+  unit: number;
+  price: number;
+  hours: number;
+  notes: string;
+};
 
 export default function App() {
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
 
+  const [rows, setRows] = useState<Row[]>([]);
   const [value, setValue] = useState<Value>(new Date());
-  const [buyerType, setBuyerType] = useState<string>("Buyer");
-  const [unitType, setUnitType] = useState<"lb" | "kg">("lb");
-  const [currency, setCurrency] = useState<string>("$");
+  console.log("input value", value);
 
   const checkLogin = async () => {
     setVerifying(true);
@@ -27,6 +37,7 @@ export default function App() {
     const data = await response.json();
     if (data.success) {
       setVerified(true);
+      setRows(data.values);
     }
     setVerifying(false);
   };
@@ -43,11 +54,15 @@ export default function App() {
     window.location.reload();
   };
 
+  const addRow = (row: Row) => {
+    setRows([...rows, row]);
+    console.log(rows);
+  };
+
   useEffect(() => {
-    checkLogin();
-    setBuyerType("Buyer");
-    setUnitType("lb");
-    setCurrency("$");
+    if (!verified) {
+      checkLogin();
+    }
   }, []);
 
   if (!verified) {
@@ -70,8 +85,9 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2 p-2">
             <AddForm
-              date={value as Date}
-              header={[buyerType, unitType, currency]}
+              buyerType={BUYER_TITLE}
+              defaultDate={value ? (value as Date) : new Date()}
+              addRow={addRow}
             />
             {/* <Button className="sm:min-w-24" variant="ghost" size="icon">
               <p className="hidden sm:flex">Settings</p>
@@ -93,25 +109,26 @@ export default function App() {
         <div className="size-full flex flex-col gap-8 lg:flex-row items-center lg:items-start lg:justify-center">
           <div className="flex flex-col gap-4">
             <Calendar
-              className="py-2 px-1 rounded-xl text-card-foreground shadow-sm"
+              className="py-2 px-1 rounded-xl text-card-foreground shadow-lg"
               calendarType="gregory"
               onChange={setValue}
               value={value}
             />
           </div>
-          <div className="flex flex-col max-w-full overflow-y-auto">
+          <div className="flex flex-col gap-1 max-w-full overflow-y-auto">
             <h2 className="text-lg">
               <span className="font-bold">Transactions{": "}</span>
-              {value ? (value as Date).toLocaleDateString() : ""}
+              {(value ? (value as Date) : new Date()).toLocaleDateString()}
             </h2>
-            <LogTable header={[buyerType, unitType, currency]} />
+            <div className="w-full h-0.5 bg-neutral-600" />
+            <LogTable
+              date={value ? (value as Date) : new Date()}
+              buyerType={BUYER_TITLE}
+              rows={rows}
+            />
           </div>
         </div>
-        <Overview
-          total={2000}
-          max={600}
-          date={value ? (value as Date) : new Date()}
-        />
+        <Overview rows={rows} date={value ? (value as Date) : new Date()} />
       </div>
     </div>
   );

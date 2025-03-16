@@ -6,74 +6,88 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Row } from "./App";
+import { cn } from "./lib/utils";
 
-export default function LogTable({ header }: { header: string[] }) {
-  const accountingData = [
-    {
-      name: "mimi",
-      description: "Office Supplies",
-      amount: 245.5,
-      total: 245.5,
-    },
-    {
-      name: "mimi",
-      description: "Consulting Services",
-      amount: 1200.0,
-      total: 1445.5,
-    },
-    {
-      name: "mimi",
-      description: "Software License",
-      amount: 599.99,
-      total: 2045.49,
-    },
-    {
-      name: "mimi",
-      description: "Marketing Campaign",
-      amount: 850.0,
-      total: 2895.49,
-    },
-  ];
-
+export default function LogTable({
+  buyerType,
+  rows,
+  date,
+}: {
+  buyerType: string;
+  rows: Row[];
+  date: Date;
+}) {
+  const hasRows =
+    rows.filter(
+      (e) => (e as any).date === date.toLocaleDateString("en-CA").split("T")[0],
+    ).length > 0;
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className="border-b border-gray-100">
-          <TableHead className="text-base font-medium">
-            {header[0]}
-            {" Name"}
-          </TableHead>
-          <TableHead className="text-base font-medium">
-            {"Amount ("}
-            {header[1]}
-            {")"}
-          </TableHead>
-          <TableHead className="text-right text-base font-medium">
-            {"Cost ("}
-            {header[2]}
-            {"/"}
-            {header[1]}
-            {")"}
-          </TableHead>
-          <TableHead className="text-right font-bold text-blue-600">
-            Total
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {accountingData.map((item, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{item.name}</TableCell>
-            <TableCell>{item.description}</TableCell>
-            <TableCell className="text-right">
-              ${item.amount.toFixed(2)}
-            </TableCell>
-            <TableCell className="text-right font-medium">
-              ${item.total.toFixed(2)}
-            </TableCell>
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-b border-gray-100">
+            <TableHead
+              className={cn(
+                "text-base font-medium",
+                hasRows || "text-transparent",
+              )}
+            >
+              {buyerType}
+            </TableHead>
+            <TableHead
+              className={cn(
+                "text-base font-medium",
+                hasRows || "text-transparent",
+              )}
+            >
+              {"Amount (lb)"}
+            </TableHead>
+            <TableHead
+              className={cn(
+                "text-base font-medium text-right",
+                hasRows || "text-transparent",
+              )}
+            >
+              {"Cost ($ / lb)"}
+            </TableHead>
+            <TableHead
+              className={cn(
+                "text-base font-bold text-right min-w-20 text-blue-600",
+                hasRows || "text-transparent",
+              )}
+            >
+              Total
+            </TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {rows
+            .filter(
+              (e) =>
+                (e as any).date ===
+                date.toLocaleDateString("en-CA").split("T")[0],
+            )
+            .map((item, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{item.buyer}</TableCell>
+                <TableCell>{item.unit}</TableCell>
+                <TableCell className="text-right">
+                  ${item.price.toFixed(2)}
+                </TableCell>
+                <TableCell className="text-right font-medium">
+                  ${(item.unit * item.price).toFixed(2)}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+      {!hasRows && (
+        <>
+          <img className="w-80 mx-auto" src="/public/plane.png" alt="" />
+          <p className="w-full p-4 text-center italic">No transactions found</p>
+        </>
+      )}
+    </>
   );
 }

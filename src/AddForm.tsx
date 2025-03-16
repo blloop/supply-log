@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,19 +13,68 @@ import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Button } from "./components/ui/button";
 import Spinner from "./Spinner";
+import { Row } from "./App";
 
 export default function AddForm({
-  header,
-  date,
+  buyerType,
+  defaultDate,
+  addRow,
 }: {
-  header: string[];
-  date: Date;
+  buyerType: string;
+  defaultDate: Date;
+  addRow: (row: Row) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [date, setDate] = useState<Date>(new Date());
+  const [buyer, setBuyer] = useState<string>("");
+  const [unit, setUnit] = useState<number | undefined>(undefined);
+  const [price, setPrice] = useState<number | undefined>(undefined);
+  // const [hours, setHours] = useState(0);
+  // const [notes, setNotes] = useState("");
+
+  useEffect(() => {
+    setDate(defaultDate);
+  }, [open]);
+
+  const pushData = async () => {
+    setLoading(true);
+    if (!unit || !price || isNaN(unit) || isNaN(price) || buyer.length < 1) {
+      alert("Form incomplete!");
+      setLoading(false);
+      return;
+    }
+
+    const newRow = {
+      date: date.toLocaleDateString("en-CA"),
+      buyer,
+      unit,
+      price,
+      hours: -1,
+      notes: "",
+    };
+
+    const response = await fetch("/api/push", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newRow),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      setOpen(false);
+      addRow(newRow);
+    } else {
+      alert("Failed to update database!");
+    }
+    setLoading(false);
+  };
+
   return (
-    <Dialog open={isNewEntryOpen} onOpenChange={setIsNewEntryOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-blue-600 hover:bg-blue-700">
           <Plus className="mr-2 h-4 w-4" />
@@ -41,48 +90,52 @@ export default function AddForm({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">
-              {header[0]}
-              {" Name"}
-            </Label>
-            <Input id="name" />
+            <Label htmlFor="name">{buyerType}</Label>
+            <Input value={buyer} onChange={(e) => setBuyer(e.target.value)} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="amount">
               {"Amount"}
-              {" ("}
-              {header[1]}
-              {")"}
+              {" (lb)"}
             </Label>
-            <Input id="amount" type="number" step="0.01" />
+            <Input
+              type="number"
+              step="0.01"
+              value={unit}
+              onChange={(e) => setUnit(Number(e.target.value))}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="cost">
               {"Cost"}
-              {" ("}
-              {header[2]}
-              {"/"}
-              {header[1]}
-              {")"}
+              {" ($ / lb)"}
             </Label>
-            <Input id="cost" type="number" step="0.01" />
+            <Input
+              type="number"
+              step="0.01"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="date">Date</Label>
             <Input
-              id="date"
               type="date"
-              defaultValue={(date || new Date()).toISOString().split("T")[0]}
+              value={date.toLocaleDateString("en-CA").split("T")[0]}
+              onChange={(e) => {
+                console.log("TRIGGERED");
+                setDate(new Date(e.target.value));
+              }}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsNewEntryOpen(false)}>
+          <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
           <Button
-            className="bg-blue-600 hover:bg-blue-700"
-            onClick={() => setOpen(false)}
+            className="bg-blue-600 hover:bg-blue-700 w-18"
+            onClick={() => pushData()}
           >
             {loading ? <Spinner /> : "Save"}
           </Button>
