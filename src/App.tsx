@@ -5,7 +5,8 @@ import LoginForm from "./LoginForm";
 import LogTable from "./LogTable";
 import AddForm from "./AddForm";
 import Loader from "./Loader";
-import { Settings, LogOut, Package } from "lucide-react"
+import { LogOut, Package } from "lucide-react"
+// import { Settings, LogOut, Package } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Overview from "./Overview";
 
@@ -14,12 +15,11 @@ type Value = Date | null | [Date | null, Date | null];
 export default function App() {  
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
-  const [screen, setScreen] = useState(0);
 
   const [value, setValue] = useState<Value>(new Date());
-  const [buyerType, setBuyerType] = useState<String>("Buyer");
+  const [buyerType, setBuyerType] = useState<string>("Buyer");
   const [unitType, setUnitType] = useState<"lb" | "kg">("lb");
-  const [currency, setCurrency] = useState<String>("$");
+  const [currency, setCurrency] = useState<string>("$");
 
   const checkLogin = async () => {
     setVerifying(true);
@@ -45,6 +45,9 @@ export default function App() {
 
   useEffect(() => {
     checkLogin();
+    setBuyerType("Buyer");
+    setUnitType("lb");
+    setCurrency("$");
   }, []);
 
   if (!verified) {
@@ -66,7 +69,7 @@ export default function App() {
             <h1 className="text-xl font-bold">Supply Log</h1>
           </div>
           <div className="flex items-center gap-2 p-2">
-            <AddForm header={[buyerType, unitType, currency]} />
+            <AddForm date={value as Date} header={[buyerType, unitType, currency]} />
             {/* <Button className="sm:min-w-24" variant="ghost" size="icon">
               <p className="hidden sm:flex">Settings</p>
               <Settings className="h-8 w-8" />

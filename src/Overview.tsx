@@ -11,7 +11,7 @@ export default function Overview({
 }) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 bg-white border-t shadow-md p-4">
-      <div className="w-full max-w-[1280px] mx-auto px-4 flex items-center justify-center gap-8 overflow-x-auto whitespace-nowrap text-sm md:text-base">
+      <div className="w-full max-w-[1280px] mx-auto px-4 flex flex-wrap items-center justify-center gap-8 overflow-x-auto whitespace-nowrap text-sm md:text-base">
         <p>Month{": "}{date.toLocaleDateString('default', { month: 'long' })}{" "}{date.getFullYear()}</p>
         <div className="flex items-center gap-1.5">
           <DollarSign className="h-4 w-4 text-blue-600 flex-shrink-0" />

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { username, password } = req.body;
+  const { username, password, rememberMe } = req.body;
 
   if (
     username === process.env.ACCOUNT_USERNAME &&
@@ -33,14 +33,23 @@ export default async function handler(req, res) {
     }
 
     const token = jwt.sign({ id: process.env.ACCOUNT_USERNAME }, process.env.JWT_SECRET, { expiresIn: "1d" });
-
-    // Set an HTTP-only cookie
-    res.setHeader("Set-Cookie", serialize("session_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      path: "/",
-    }));
+    
+    if (rememberMe) {
+      res.setHeader("Set-Cookie", serialize("session_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        path: "/",
+      }));
+    } else {
+      res.setHeader("Set-Cookie", serialize("session_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+        maxAge: 30,
+        path: "/",
+      }));
+    }
 
     res.status(200).json({ success: true });
   } else {
