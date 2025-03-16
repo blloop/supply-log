@@ -1,10 +1,11 @@
 import { DollarSign, TrendingUp, Trophy } from "lucide-react";
+import { Row } from "./App";
 
 export default function Overview({
   rows,
   date,
 }: {
-  rows: Object[];
+  rows: Row[];
   date: Date;
 }) {
   console.log("rows", rows);
@@ -12,7 +13,7 @@ export default function Overview({
   console.log(
     "filtered",
     rows.filter(
-      (e) => (e as any).date === date.toLocaleDateString("en-CA").split("T")[0],
+      (e) => e.date === date.toLocaleDateString("en-CA").split("T")[0],
     ),
   );
 

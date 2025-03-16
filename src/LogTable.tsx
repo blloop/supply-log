@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Row } from "./App";
 import { cn } from "./lib/utils";
+import Plane from "./assets/plane.png"
 
 export default function LogTable({
   buyerType,
@@ -20,7 +21,7 @@ export default function LogTable({
 }) {
   const hasRows =
     rows.filter(
-      (e) => (e as any).date === date.toLocaleDateString("en-CA").split("T")[0],
+      (e) => e.date === date.toLocaleDateString("en-CA").split("T")[0],
     ).length > 0;
   return (
     <>
@@ -65,7 +66,7 @@ export default function LogTable({
           {rows
             .filter(
               (e) =>
-                (e as any).date ===
+                e.date ===
                 date.toLocaleDateString("en-CA").split("T")[0],
             )
             .map((item, index) => (
@@ -84,7 +85,7 @@ export default function LogTable({
       </Table>
       {!hasRows && (
         <>
-          <img className="w-80 mx-auto" src="/public/plane.png" alt="" />
+          <img className="w-80 mx-auto" src={Plane} alt="" />
           <p className="w-full p-4 text-center italic">No transactions found</p>
         </>
       )}
