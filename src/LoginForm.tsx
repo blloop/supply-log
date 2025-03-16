@@ -7,7 +7,7 @@ import { Package } from "lucide-react";
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async () => {
     const response = await fetch("/api/auth", {
@@ -22,7 +22,7 @@ export default function LoginForm() {
     } else {
       setUsername("");
       setPassword("");
-      alert("Invalid credentials")
+      alert("Invalid credentials");
     }
   };
 
@@ -34,7 +34,9 @@ export default function LoginForm() {
             <Package className="h-8 w-8 text-blue-600" />
             <h1 className="text-3xl font-bold">Supply Log</h1>
           </div>
-          <p className="text-gray-500 mt-2">Sign in to your account to continue</p>
+          <p className="text-gray-500 mt-2">
+            Sign in to your account to continue
+          </p>
         </div>
 
         <div className="bg-white p-8 rounded-lg border shadow-sm">
@@ -52,12 +54,6 @@ export default function LoginForm() {
               </div>
 
               <div className="space-y-2">
-                {/* <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <a href="#" className="text-sm text-blue-600 hover:underline">
-                    Forgot password?
-                  </a>
-                </div> */}
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -83,28 +79,16 @@ export default function LoginForm() {
                 </label>
               </div>
             </div>
-            <Button type="button" onClick={handleLogin} className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button
+              type="button"
+              onClick={handleLogin}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+            >
               Sign in
             </Button>
           </div>
         </div>
       </div>
     </div>
-    // <div>
-    //   <h1>Login</h1>
-    //   <input
-    //     type="text"
-    //     placeholder="Username"
-    //     value={username}
-    //     onChange={(e) => setUsername(e.target.value)}
-    //   />
-    //   <input
-    //     type="password"
-    //     placeholder="Password"
-    //     value={password}
-    //     onChange={(e) => setPassword(e.target.value)}
-    //   />
-    //   <button onClick={handleLogin}>Login</button>
-    // </div>
   );
 }

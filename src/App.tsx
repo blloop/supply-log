@@ -1,18 +1,18 @@
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import LogTable from "./LogTable";
 import AddForm from "./AddForm";
 import Loader from "./Loader";
-import { LogOut, Package } from "lucide-react"
+import { LogOut, Package } from "lucide-react";
 // import { Settings, LogOut, Package } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import Overview from "./Overview";
 
 type Value = Date | null | [Date | null, Date | null];
 
-export default function App() {  
+export default function App() {
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
 
@@ -69,12 +69,20 @@ export default function App() {
             <h1 className="text-xl font-bold">Supply Log</h1>
           </div>
           <div className="flex items-center gap-2 p-2">
-            <AddForm date={value as Date} header={[buyerType, unitType, currency]} />
+            <AddForm
+              date={value as Date}
+              header={[buyerType, unitType, currency]}
+            />
             {/* <Button className="sm:min-w-24" variant="ghost" size="icon">
               <p className="hidden sm:flex">Settings</p>
               <Settings className="h-8 w-8" />
             </Button> */}
-            <Button className="sm:min-w-24" onClick={handleLogout} variant="ghost" size="icon">
+            <Button
+              className="sm:min-w-24"
+              onClick={handleLogout}
+              variant="ghost"
+              size="icon"
+            >
               <p className="hidden sm:flex">Log Out</p>
               <LogOut />
             </Button>
@@ -84,16 +92,26 @@ export default function App() {
       <div className="size-full max-w-[1280px] gap-8 p-8 mx-auto flex flex-col">
         <div className="size-full flex flex-col gap-8 lg:flex-row items-center lg:items-start lg:justify-center">
           <div className="flex flex-col gap-4">
-            <Calendar className="py-2 px-1 rounded-xl text-card-foreground shadow-sm" calendarType="gregory" onChange={setValue} value={value} />
+            <Calendar
+              className="py-2 px-1 rounded-xl text-card-foreground shadow-sm"
+              calendarType="gregory"
+              onChange={setValue}
+              value={value}
+            />
           </div>
           <div className="flex flex-col max-w-full overflow-y-auto">
-            <h2 className="text-lg"><span className="font-bold">Transactions{": "}</span>{
-                value ? ((value as Date).toLocaleDateString()) : ""
-              }</h2>
+            <h2 className="text-lg">
+              <span className="font-bold">Transactions{": "}</span>
+              {value ? (value as Date).toLocaleDateString() : ""}
+            </h2>
             <LogTable header={[buyerType, unitType, currency]} />
           </div>
         </div>
-        <Overview total={2000} max={600} date={value ? (value as Date) : new Date()} />
+        <Overview
+          total={2000}
+          max={600}
+          date={value ? (value as Date) : new Date()}
+        />
       </div>
     </div>
   );

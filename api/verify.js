@@ -12,7 +12,9 @@ export default async function handler(req, res) {
   const token = cookies.session_token;
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Not authenticated" });
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authenticated" });
   }
 
   try {

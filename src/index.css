@@ -132,7 +132,8 @@
   }
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   font-size: 18px;
@@ -140,4 +141,18 @@ html, body {
 
 .react-calendar {
   border-color: #d7d7d7 !important;
+}
+
+.react-calendar__tile--now {
+  background-color: transparent !important;
+  box-sizing: border-box !important;
+  border: 2px solid black !important;
+}
+
+.react-calendar__tile--now.react-calendar__tile--active {
+  background-color: #1087ff !important;
+}
+
+.react-calendar__tile--now:not(.react-calendar__tile--active):hover {
+  background-color: #e6e6e6 !important;
 }
