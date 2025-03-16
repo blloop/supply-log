@@ -32,12 +32,29 @@ export default function App() {
 
   const checkLogin = async () => {
     setVerifying(true);
-    const response = await fetch("/api/verify", { credentials: "include" });
-    const data = await response.json();
-    if (data.success) {
-      setVerified(true);
-      setRows(data.values);
+    const username = sessionStorage.getItem("username");
+    const password = sessionStorage.getItem("password");
+
+    if (username && password) {
+      const response = await fetch("/api/load", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setVerified(true);
+        setRows(data.values);
+      }
+    } else {
+      const response = await fetch("/api/verify", { credentials: "include" });
+      const data = await response.json();
+      if (data.success) {
+        setVerified(true);
+        setRows(data.values);
+      }
     }
+
     setVerifying(false);
   };
 
@@ -47,9 +64,10 @@ export default function App() {
       method: "POST",
       credentials: "include",
     });
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("password");
     setVerified(false);
     setVerifying(false);
-    window.location.reload();
   };
 
   const addRow = (row: Row) => {

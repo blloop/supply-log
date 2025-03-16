@@ -21,6 +21,10 @@ export default function LoginForm() {
 
     const data = await response.json();
     if (data.success) {
+      if (!rememberMe) {
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("password", password);
+      }
       window.location.reload();
     } else {
       setUsername("");

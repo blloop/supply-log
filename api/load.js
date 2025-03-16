@@ -1,6 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { serialize } from "cookie";
-import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -9,7 +7,7 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { username, password, rememberMe } = req.body;
+  const { username, password } = req.body;
 
   if (
     username !== process.env.ACCOUNT_USERNAME ||
@@ -17,7 +15,7 @@ export default async function handler(req, res) {
   ) {
     return res
       .status(401)
-      .json({ success: false, message: "Invalid credentials" });
+      .json({ success: false, message: "Not authenticated" });
   }
 
   const supabase = createClient(
@@ -37,25 +35,14 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Database error", authError });
   }
 
-  if (rememberMe) {
-    const token = jwt.sign(
-      {
-        username: process.env.ACCOUNT_USERNAME,
-        password: process.env.ACCOUNT_PASSWORD,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "30d" },
-    );
-    res.setHeader(
-      "Set-Cookie",
-      serialize("session_token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
-        path: "/",
-      }),
-    );
+  const { data, dataError } = await supabase.from("prod").select("*");
+
+  if (dataError) {
+    console.log("dataError", dataError);
+    return res
+      .status(500)
+      .json({ success: false, message: "Data retrieval error", dataError });
   }
 
-  return res.status(200).json({ success: true });
+  return res.json({ success: true, values: data });
 }

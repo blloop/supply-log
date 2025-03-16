@@ -18,6 +18,16 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Not authenticated" });
   }
 
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (
+    decoded.username !== process.env.ACCOUNT_USERNAME ||
+    decoded.password !== process.env.ACCOUNT_PASSWORD
+  ) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authenticated" });
+  }
+
   const supabase = createClient(
     process.env.VITE_SUPABASE_URL,
     process.env.VITE_SUPABASE_KEY,
@@ -44,10 +54,5 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Data retrieval error", dataError });
   }
 
-  try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    return res.json({ success: true, values: data });
-  } catch (error) {
-    return res.status(401).json({ success: false, message: "Invalid token" });
-  }
+  return res.json({ success: true, values: data });
 }
