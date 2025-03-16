@@ -1,7 +1,8 @@
 import { DollarSign, TrendingUp, Trophy } from "lucide-react";
-import { Row } from "./App";
+// import { Row } from "./App";
 
-export default function Overview({ rows, date }: { rows: Row[]; date: Date }) {
+// export default function Overview({ rows, date }: { rows: Row[]; date: Date }) {
+export default function Overview({ date }: { date: Date }) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 bg-white border-t shadow-md p-4">
       <div className="w-full max-w-[1280px] mx-auto px-4 flex flex-wrap items-center justify-center gap-8 overflow-x-auto whitespace-nowrap text-sm md:text-base">
