@@ -55,13 +55,29 @@ export default function AddForm({
       notes: "",
     };
 
-    const response = await fetch("/api/push", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newRow),
-    });
+    const username = sessionStorage.getItem("username");
+    const password = sessionStorage.getItem("password");
+
+    const response =
+      username && password
+        ? await fetch("/api/pushLocal", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...newRow,
+              username: username,
+              password: password,
+            }),
+          })
+        : await fetch("/api/push", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newRow),
+          });
 
     const data = await response.json();
     if (data.success) {

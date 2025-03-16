@@ -35,24 +35,19 @@ export default function App() {
     const username = sessionStorage.getItem("username");
     const password = sessionStorage.getItem("password");
 
-    if (username && password) {
-      const response = await fetch("/api/load", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        setVerified(true);
-        setRows(data.values);
-      }
-    } else {
-      const response = await fetch("/api/verify", { credentials: "include" });
-      const data = await response.json();
-      if (data.success) {
-        setVerified(true);
-        setRows(data.values);
-      }
+    const response =
+      username && password
+        ? await fetch("/api/verifyLocal", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          })
+        : await fetch("/api/verify", { credentials: "include" });
+
+    const data = await response.json();
+    if (data.success) {
+      setVerified(true);
+      setRows(data.values);
     }
 
     setVerifying(false);
