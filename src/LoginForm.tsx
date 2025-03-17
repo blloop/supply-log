@@ -4,12 +4,15 @@ import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 import { Package } from "lucide-react";
 import Spinner from "./Spinner";
+import { useLangContext } from "./LangContext";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { tl } = useLangContext();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -40,10 +43,10 @@ export default function LoginForm() {
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center justify-center flex-wrap gap-2 mb-2">
             <Package className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold">Supply Log</h1>
+            <h1 className="text-3xl font-bold">{tl("Supply Log")}</h1>
           </div>
           <p className="text-gray-500 mt-2">
-            Sign in to your account to continue
+            {tl("Sign in to your account to continue")}
           </p>
         </div>
 
@@ -51,7 +54,7 @@ export default function LoginForm() {
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">{tl("Username")}</Label>
                 <Input
                   id="username"
                   value={username}
@@ -61,7 +64,7 @@ export default function LoginForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{tl("Password")}</Label>
                 <Input
                   id="password"
                   type="password"
@@ -81,7 +84,7 @@ export default function LoginForm() {
                   htmlFor="remember"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Remember me
+                  {tl("Remember me")}
                 </label>
               </div>
             </div>
@@ -90,7 +93,7 @@ export default function LoginForm() {
               onClick={handleLogin}
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
-              {loading ? <Spinner /> : "Sign in"}
+              {loading ? <Spinner /> : tl("Sign in")}
             </Button>
           </div>
         </div>

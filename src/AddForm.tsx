@@ -14,6 +14,7 @@ import { Plus } from "lucide-react";
 import { Button } from "./components/ui/button";
 import Spinner from "./Spinner";
 import { Row } from "./App";
+import { useLangContext } from "./LangContext";
 
 export default function AddForm({
   buyerType,
@@ -33,6 +34,8 @@ export default function AddForm({
   const [price, setPrice] = useState<number | undefined>(undefined);
   // const [hours, setHours] = useState(0);
   // const [notes, setNotes] = useState("");
+
+  const { tl } = useLangContext();
 
   useEffect(() => {
     setDate(defaultDate);
@@ -101,24 +104,24 @@ export default function AddForm({
       <DialogTrigger asChild>
         <Button className="bg-blue-600 hover:bg-blue-700">
           <Plus className="mr-2 h-4 w-4" />
-          New Entry
+          {tl("New Entry")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Entry</DialogTitle>
+          <DialogTitle>{tl("Add New Entry")}</DialogTitle>
           <DialogDescription>
-            Enter the details for the new entry
+            {tl("Enter the details for the new entry")}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">{buyerType}</Label>
+            <Label htmlFor="name">{tl(buyerType)}</Label>
             <Input value={buyer} onChange={(e) => setBuyer(e.target.value)} />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="amount">
-              {"Amount"}
+              {tl("Amount")}
               {" (lb)"}
             </Label>
             <Input
@@ -130,7 +133,7 @@ export default function AddForm({
           </div>
           <div className="grid gap-2">
             <Label htmlFor="cost">
-              {"Cost"}
+              {tl("Cost")}
               {" ($ / lb)"}
             </Label>
             <Input
@@ -141,7 +144,7 @@ export default function AddForm({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="date">Date</Label>
+            <Label htmlFor="date">{tl("Date")}</Label>
             <Input
               type="date"
               value={date.toLocaleDateString("en-CA").split("T")[0]}
@@ -153,13 +156,13 @@ export default function AddForm({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
+            {tl("Cancel")}
           </Button>
           <Button
             className="bg-blue-600 hover:bg-blue-700 md:w-18"
             onClick={() => pushData()}
           >
-            {loading ? <Spinner /> : "Save"}
+            {loading ? <Spinner /> : tl("Save")}
           </Button>
         </DialogFooter>
       </DialogContent>

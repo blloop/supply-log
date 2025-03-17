@@ -21,6 +21,7 @@ import { Trash } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { useState } from "react";
 import Spinner from "./Spinner";
+import { useLangContext } from "./LangContext";
 
 export default function LogTable({
   buyerType,
@@ -36,6 +37,8 @@ export default function LogTable({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currID, setCurrID] = useState(-1);
+
+  const { tl } = useLangContext();
 
   const pushData = async () => {
     setLoading(true);
@@ -81,20 +84,20 @@ export default function LogTable({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>{tl("Confirm Deletion")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this row?
+              {tl("Are you sure you want to delete this row?")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+              {tl("Cancel")}
             </Button>
             <Button
               className="bg-red-600 hover:bg-red-700 md:w-18"
               onClick={pushData}
             >
-              {loading ? <Spinner /> : "Delete"}
+              {loading ? <Spinner /> : tl("Delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -103,17 +106,23 @@ export default function LogTable({
         <TableHeader>
           <TableRow className="border-b border-gray-100">
             {showDate && (
-              <TableHead className="text-base font-medium">Date</TableHead>
+              <TableHead className="text-base font-medium">
+                {tl("Date")}
+              </TableHead>
             )}
-            <TableHead className="text-base font-medium">{buyerType}</TableHead>
             <TableHead className="text-base font-medium">
-              {"Amount (lb)"}
+              {tl(buyerType)}
+            </TableHead>
+            <TableHead className="text-base font-medium">
+              {tl("Amount")}
+              {" (lb)"}
             </TableHead>
             <TableHead className="text-base font-medium text-right">
-              {"Cost ($/lb)"}
+              {tl("Cost")}
+              {" ($/lb)"}
             </TableHead>
             <TableHead className="text-base font-bold text-right min-w-20 text-blue-600">
-              Total
+              {tl("Total")}
             </TableHead>
             {showDate && (
               <TableHead className="text-base font-medium"></TableHead>
