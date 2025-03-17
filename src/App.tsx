@@ -9,17 +9,15 @@ import { ArrowLeft, LogOut, Package } from "lucide-react";
 // import { Settings, LogOut, Package } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { cn } from "./lib/utils";
-// import Overview from "./Overview";
 
 const BUYER_TITLE = import.meta.env.VITE_BUYER_TYPE || "Buyer";
 
-console.log(import.meta.env.VITE_BUYER_TYPE)
-
 export type Row = {
+  id: number;
   date: string;
   buyer: string;
-  unit: number;
-  price: number;
+  unit: string;
+  price: string;
   hours: number;
   notes: string;
 };
@@ -117,21 +115,29 @@ export default function App() {
           </div>
         </div>
       </header>
-      <div className={cn("relative size-full max-w-[1280px] gap-8 p-4 lg:p-8 mx-auto flex flex-col lg:flex-row items-center lg:items-start lg:justify-center", 
-        showAll ? "overflow-hidden gap-2 lg:gap-8" : "overflow-x-hidden overflow-y-auto"
-      )}>
-        {showAll ?
+      <div
+        className={cn(
+          "relative size-full max-w-[1280px] gap-8 p-4 lg:p-8 mx-auto flex flex-col lg:flex-row items-center lg:items-start lg:justify-center",
+          showAll
+            ? "overflow-hidden gap-2 lg:gap-8"
+            : "overflow-x-hidden overflow-y-auto",
+        )}
+      >
+        {showAll ? (
           <>
-            <Button className="self-start" variant="outline" onClick={() => setShowAll(false)}><ArrowLeft />Back</Button>
-            <div className="p-2 md:p-4 size-full bg-white rounded-xl">
-              <LogTable
-                buyerType={BUYER_TITLE}
-                rows={rows}
-                showDate={true}
-              />
+            <Button
+              className="self-start bg-transparent border-0 shadow-none"
+              variant="outline"
+              onClick={() => setShowAll(false)}
+            >
+              <ArrowLeft />
+              Back
+            </Button>
+            <div className="p-2 md:p-4 size-full bg-white rounded-xl overflow-hidden">
+              <LogTable buyerType={BUYER_TITLE} rows={rows} showDate={true} />
             </div>
           </>
-        :
+        ) : (
           <>
             <div className="flex flex-col gap-4">
               <Calendar
@@ -140,7 +146,10 @@ export default function App() {
                 onChange={(e) => setValue(e as Date)}
                 value={value}
               />
-              <Button onClick={() => setShowAll(true)} className="bg-white border border-neutral-200 shadow-lg hover:bg-neutral-300 text-blue-600">
+              <Button
+                onClick={() => setShowAll(true)}
+                className="bg-white border border-neutral-200 shadow-lg hover:bg-neutral-300 text-blue-600"
+              >
                 Show all transactions
               </Button>
             </div>
@@ -153,13 +162,14 @@ export default function App() {
               <LogTable
                 buyerType={BUYER_TITLE}
                 rows={rows.filter(
-                  (e) => e.date === value.toLocaleDateString("en-CA").split("T")[0],
+                  (e) =>
+                    e.date === value.toLocaleDateString("en-CA").split("T")[0],
                 )}
                 showDate={false}
               />
             </div>
           </>
-        }
+        )}
       </div>
     </div>
   );

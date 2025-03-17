@@ -41,7 +41,7 @@ export default function AddForm({
   const pushData = async () => {
     setLoading(true);
     if (!unit || !price || isNaN(unit) || isNaN(price) || buyer.length < 1) {
-      alert("Form incomplete!");
+      alert("Form is incomplete!");
       setLoading(false);
       return;
     }
@@ -49,8 +49,8 @@ export default function AddForm({
     const newRow = {
       date: date.toLocaleDateString("en-CA"),
       buyer,
-      unit,
-      price,
+      unit: unit.toFixed(2),
+      price: price.toFixed(2),
       hours: -1,
       notes: "",
     };
@@ -82,7 +82,13 @@ export default function AddForm({
     const data = await response.json();
     if (data.success) {
       setOpen(false);
-      addRow(newRow);
+      addRow({
+        ...newRow,
+        id: data.id,
+      });
+      setBuyer("");
+      setUnit(undefined);
+      setPrice(undefined);
     } else {
       alert("Failed to update database!");
     }

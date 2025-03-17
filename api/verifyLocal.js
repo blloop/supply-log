@@ -44,5 +44,10 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Data retrieval error", dataError });
   }
 
+  data.forEach((e) => {
+    e.unit = (Number(e.unit) / 100).toFixed(2);
+    e.price = (Number(e.price) / 100).toFixed(2);
+  });
+
   return res.json({ success: true, values: data });
 }

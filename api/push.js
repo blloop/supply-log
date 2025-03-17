@@ -3,6 +3,12 @@ import { parse } from "cookie";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res
+      .status(405)
+      .json({ success: false, message: "Method Not Allowed" });
+  }
+
   const cookies = parse(req.headers.cookie || "");
   const token = cookies.session_token;
 
@@ -44,8 +50,8 @@ export default async function handler(req, res) {
   const { data, dataError } = await supabase.from("prod").insert({
     date,
     buyer,
-    unit,
-    price,
+    unit: Math.floor(Number(unit * 100)),
+    price: Math.floor(Number(price * 100)),
     hours,
     notes,
   });
@@ -57,5 +63,5 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Data retrieval error", dataError });
   }
 
-  return res.json({ success: true, values: data });
+  return res.json({ success: true, id: data?.id || -1 });
 }

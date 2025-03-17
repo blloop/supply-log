@@ -21,18 +21,14 @@ export default function LogTable({
 }) {
   return (
     <>
-      <Table className={cn(rows.length < 1 && "hidden")}>
+      <Table className={cn(rows?.length < 1 && "hidden")}>
         <TableHeader>
           <TableRow className="border-b border-gray-100">
-            {showDate &&
-              <TableHead className="text-base font-medium">
-                Date
-              </TableHead>
-            }
+            {showDate && (
+              <TableHead className="text-base font-medium">Date</TableHead>
+            )}
+            <TableHead className="text-base font-medium">{buyerType}</TableHead>
             <TableHead className="text-base font-medium">
-              {buyerType}
-            </TableHead>
-            <TableHead className="text-base font-medium" >
               {"Amount (lb)"}
             </TableHead>
             <TableHead className="text-base font-medium text-right">
@@ -41,22 +37,31 @@ export default function LogTable({
             <TableHead className="text-base font-bold text-right min-w-20 text-blue-600">
               Total
             </TableHead>
+            {showDate && (
+              <TableHead className="text-base font-medium"></TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((item, index) => (
-            <TableRow key={index}>
-              {showDate &&
+            <TableRow
+              className={cn(
+                index % 2 === (showDate ? 1 : 0) ? "bg-white" : "bg-gray-100",
+              )}
+              key={index}
+            >
+              {showDate && (
                 <TableCell className="font-medium">{item.date}</TableCell>
-              }
+              )}
               <TableCell className="font-medium">{item.buyer}</TableCell>
               <TableCell>{item.unit}</TableCell>
-              <TableCell className="text-right">
-                ${item.price.toFixed(2)}
-              </TableCell>
+              <TableCell className="text-right">${item.price}</TableCell>
               <TableCell className="text-right font-medium">
-                ${(item.unit * item.price).toFixed(2)}
+                ${(Number(item.unit) * Number(item.price)).toFixed(2)}
               </TableCell>
+              {showDate && (
+                <TableCell className="font-medium">{item.buyer}</TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
