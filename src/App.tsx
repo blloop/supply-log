@@ -5,14 +5,15 @@ import LoginForm from "./LoginForm";
 import LogTable from "./LogTable";
 import AddForm from "./AddForm";
 import Loader from "./Loader";
-import { LogOut, Package } from "lucide-react";
+import { ArrowLeft, LogOut, Package } from "lucide-react";
 // import { Settings, LogOut, Package } from "lucide-react"
 import { Button } from "@/components/ui/button";
+import { cn } from "./lib/utils";
 // import Overview from "./Overview";
 
-const BUYER_TITLE = "Restaurant";
+const BUYER_TITLE = import.meta.env.VITE_BUYER_TYPE || "Buyer";
 
-type Value = Date | null | [Date | null, Date | null];
+console.log(import.meta.env.VITE_BUYER_TYPE)
 
 export type Row = {
   date: string;
@@ -26,9 +27,10 @@ export type Row = {
 export default function App() {
   const [verified, setVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const [rows, setRows] = useState<Row[]>([]);
-  const [value, setValue] = useState<Value>(new Date());
+  const [value, setValue] = useState<Date>(new Date());
 
   const checkLogin = async () => {
     setVerifying(true);
@@ -85,7 +87,7 @@ export default function App() {
   }
 
   return (
-    <div className="size-full min-h-screen bg-gray-100">
+    <div className="flex flex-col w-screen h-screen bg-gray-100">
       {verifying && <Loader />}
       <header className="sticky top-0 z-10 border-b shadow-sm bg-white">
         <div className="w-full max-w-[1280px] mx-auto min-h-16 flex flex-wrap items-center justify-between px-4">
@@ -96,7 +98,7 @@ export default function App() {
           <div className="flex items-center gap-2 p-2">
             <AddForm
               buyerType={BUYER_TITLE}
-              defaultDate={value ? (value as Date) : new Date()}
+              defaultDate={value}
               addRow={addRow}
             />
             {/* <Button className="sm:min-w-24" variant="ghost" size="icon">
@@ -115,30 +117,49 @@ export default function App() {
           </div>
         </div>
       </header>
-      <div className="size-full max-w-[1280px] gap-8 p-8 mx-auto flex flex-col">
-        <div className="size-full flex flex-col gap-8 lg:flex-row items-center lg:items-start lg:justify-center">
-          <div className="flex flex-col gap-4">
-            <Calendar
-              className="py-2 px-1 rounded-xl text-card-foreground shadow-lg"
-              calendarType="gregory"
-              onChange={setValue}
-              value={value}
-            />
-          </div>
-          <div className="flex flex-col gap-1 max-w-full overflow-y-auto">
-            <h2 className="text-lg">
-              <span className="font-bold">Transactions{": "}</span>
-              {(value ? (value as Date) : new Date()).toLocaleDateString()}
-            </h2>
-            <div className="w-full h-0.5 bg-neutral-600" />
-            <LogTable
-              date={value ? (value as Date) : new Date()}
-              buyerType={BUYER_TITLE}
-              rows={rows}
-            />
-          </div>
-        </div>
-        {/* <Overview rows={rows} date={value ? (value as Date) : new Date()} /> */}
+      <div className={cn("relative size-full max-w-[1280px] gap-8 p-4 lg:p-8 mx-auto flex flex-col lg:flex-row items-center lg:items-start lg:justify-center", 
+        showAll ? "overflow-hidden gap-2 lg:gap-8" : "overflow-x-hidden overflow-y-auto"
+      )}>
+        {showAll ?
+          <>
+            <Button className="self-start" variant="outline" onClick={() => setShowAll(false)}><ArrowLeft />Back</Button>
+            <div className="p-2 md:p-4 size-full bg-white rounded-xl">
+              <LogTable
+                buyerType={BUYER_TITLE}
+                rows={rows}
+                showDate={true}
+              />
+            </div>
+          </>
+        :
+          <>
+            <div className="flex flex-col gap-4">
+              <Calendar
+                className="py-2 px-1 rounded-xl text-card-foreground shadow-lg"
+                calendarType="gregory"
+                onChange={(e) => setValue(e as Date)}
+                value={value}
+              />
+              <Button onClick={() => setShowAll(true)} className="bg-white border border-neutral-200 shadow-lg hover:bg-neutral-300 text-blue-600">
+                Show all transactions
+              </Button>
+            </div>
+            <div className="flex flex-col gap-1 max-h-96 max-w-full sm:min-w-[24rem]">
+              <h2 className="flex flex-wrap gap-1 text-lg">
+                <span className="font-bold">Transactions{": "}</span>
+                {value.toLocaleDateString("en-CA")}
+              </h2>
+              <div className="w-full h-0.5 shrink-0 bg-neutral-600" />
+              <LogTable
+                buyerType={BUYER_TITLE}
+                rows={rows.filter(
+                  (e) => e.date === value.toLocaleDateString("en-CA").split("T")[0],
+                )}
+                showDate={false}
+              />
+            </div>
+          </>
+        }
       </div>
     </div>
   );

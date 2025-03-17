@@ -13,75 +13,55 @@ import Plane from "./assets/plane.png";
 export default function LogTable({
   buyerType,
   rows,
-  date,
+  showDate,
 }: {
   buyerType: string;
   rows: Row[];
-  date: Date;
+  showDate: boolean;
 }) {
-  const hasRows =
-    rows.filter(
-      (e) => e.date === date.toLocaleDateString("en-CA").split("T")[0],
-    ).length > 0;
   return (
     <>
-      <Table>
+      <Table className={cn(rows.length < 1 && "hidden")}>
         <TableHeader>
           <TableRow className="border-b border-gray-100">
-            <TableHead
-              className={cn(
-                "text-base font-medium",
-                hasRows || "text-transparent",
-              )}
-            >
+            {showDate &&
+              <TableHead className="text-base font-medium">
+                Date
+              </TableHead>
+            }
+            <TableHead className="text-base font-medium">
               {buyerType}
             </TableHead>
-            <TableHead
-              className={cn(
-                "text-base font-medium",
-                hasRows || "text-transparent",
-              )}
-            >
+            <TableHead className="text-base font-medium" >
               {"Amount (lb)"}
             </TableHead>
-            <TableHead
-              className={cn(
-                "text-base font-medium text-right",
-                hasRows || "text-transparent",
-              )}
-            >
-              {"Cost ($ / lb)"}
+            <TableHead className="text-base font-medium text-right">
+              {"Cost ($/lb)"}
             </TableHead>
-            <TableHead
-              className={cn(
-                "text-base font-bold text-right min-w-20 text-blue-600",
-                hasRows || "text-transparent",
-              )}
-            >
+            <TableHead className="text-base font-bold text-right min-w-20 text-blue-600">
               Total
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows
-            .filter(
-              (e) => e.date === date.toLocaleDateString("en-CA").split("T")[0],
-            )
-            .map((item, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{item.buyer}</TableCell>
-                <TableCell>{item.unit}</TableCell>
-                <TableCell className="text-right">
-                  ${item.price.toFixed(2)}
-                </TableCell>
-                <TableCell className="text-right font-medium">
-                  ${(item.unit * item.price).toFixed(2)}
-                </TableCell>
-              </TableRow>
-            ))}
+          {rows.map((item, index) => (
+            <TableRow key={index}>
+              {showDate &&
+                <TableCell className="font-medium">{item.date}</TableCell>
+              }
+              <TableCell className="font-medium">{item.buyer}</TableCell>
+              <TableCell>{item.unit}</TableCell>
+              <TableCell className="text-right">
+                ${item.price.toFixed(2)}
+              </TableCell>
+              <TableCell className="text-right font-medium">
+                ${(item.unit * item.price).toFixed(2)}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
-      {!hasRows && (
+      {rows.length === 0 && (
         <>
           <img className="w-80 mx-auto" src={Plane} alt="" />
           <p className="w-full p-4 text-center italic">No transactions found</p>

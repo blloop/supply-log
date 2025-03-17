@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { parse } from "cookie";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   const cookies = parse(req.headers.cookie || "");

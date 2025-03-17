@@ -35,10 +35,10 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen size-full flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="flex flex-col items-center text-center">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center justify-center flex-wrap gap-2 mb-2">
             <Package className="h-8 w-8 text-blue-600" />
             <h1 className="text-3xl font-bold">Supply Log</h1>
           </div>
@@ -47,14 +47,13 @@ export default function LoginForm() {
           </p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg border shadow-sm">
+        <div className="bg-white p-4 sm:p-8 rounded-lg border shadow-sm">
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
@@ -66,7 +65,6 @@ export default function LoginForm() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
