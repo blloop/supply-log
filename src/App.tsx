@@ -69,6 +69,10 @@ export default function App() {
     setRows([...rows, row]);
   };
 
+  const deleteRow = (id: number) => {
+    setRows(rows.filter((e) => e.id !== id));
+  };
+
   useEffect(() => {
     if (!verified) {
       checkLogin();
@@ -134,7 +138,12 @@ export default function App() {
               Back
             </Button>
             <div className="p-2 md:p-4 size-full bg-white rounded-xl overflow-hidden">
-              <LogTable buyerType={BUYER_TITLE} rows={rows} showDate={true} />
+              <LogTable
+                buyerType={BUYER_TITLE}
+                rows={rows}
+                showDate={true}
+                deleteRow={deleteRow}
+              />
             </div>
           </>
         ) : (
@@ -166,6 +175,7 @@ export default function App() {
                     e.date === value.toLocaleDateString("en-CA").split("T")[0],
                 )}
                 showDate={false}
+                deleteRow={deleteRow}
               />
             </div>
           </>

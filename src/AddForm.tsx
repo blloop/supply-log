@@ -76,6 +76,7 @@ export default function AddForm({
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(newRow),
           });
 
@@ -155,7 +156,7 @@ export default function AddForm({
             Cancel
           </Button>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 w-18"
+            className="bg-blue-600 hover:bg-blue-700 md:w-18"
             onClick={() => pushData()}
           >
             {loading ? <Spinner /> : "Save"}

@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { parse } from "cookie";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -7,18 +9,26 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Method Not Allowed" });
   }
 
-  const { username, password } = req.body;
+  const cookies = parse(req.headers.cookie || "");
+  const token = cookies.session_token;
 
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Not authenticated" });
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
   if (
-    username !== process.env.ACCOUNT_USERNAME ||
-    password !== process.env.ACCOUNT_PASSWORD
+    decoded.username !== process.env.ACCOUNT_USERNAME ||
+    decoded.password !== process.env.ACCOUNT_PASSWORD
   ) {
     return res
       .status(401)
       .json({ success: false, message: "Not authenticated" });
   }
 
-  const { date, buyer, unit, price, hours, notes } = req.body;
+  const { id } = req.body;
 
   const supabase = createClient(
     process.env.VITE_SUPABASE_URL,
@@ -37,14 +47,7 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Database error", authError });
   }
 
-  const { data, dataError } = await supabase.from("prod").insert({
-    date,
-    buyer,
-    unit: Math.floor(Number(unit * 100)),
-    price: Math.floor(Number(price * 100)),
-    hours,
-    notes,
-  });
+  const { __, dataError } = await supabase.from("prod").delete().eq("id", id);
 
   if (dataError) {
     console.log("dataError", dataError);
@@ -53,5 +56,5 @@ export default async function handler(req, res) {
       .json({ success: false, message: "Data retrieval error", dataError });
   }
 
-  return res.json({ success: true, id: data?.id || -1 });
+  return res.json({ success: true });
 }
